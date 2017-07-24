@@ -31,9 +31,13 @@ def getcnpj( nome_restaurante ):
    soup = BeautifulSoup(page.content, 'html.parser')
    resultato_html = soup.find_all(id="search_results")
    if not resultato_html:
-      return "27691471000140"
+      return "02748075000180"
    resultato_html_str = str(resultato_html[0])
    strv = resultato_html_str.split('<h3><a href="/', 1000000)
+   try:
+      t = strv[1]
+   except IndexError:
+      return "02748075000180"
    link = strv[1].split('" title=', 1000000)
    link = "http://www.cnpj.ninja/" + link[0]
    # busca do cnpj
@@ -41,7 +45,7 @@ def getcnpj( nome_restaurante ):
    soupe = BeautifulSoup(pagina.content, 'html.parser')
    html_resultado = soupe.find_all(id="details")
    if not html_resultado:
-       return "27691471000140"
+       return "02748075000180"
    html_resultado_str = str(html_resultado[0])
    str_v = html_resultado_str.split('ero do CNPJ</h5><p>', 1000000)
    cnpj = str_v[1].split('</p><div class="adg"', 1000000)
@@ -56,7 +60,7 @@ wb = openpyxl.load_workbook(filename = 'clientes.xlsx')
 sheets = wb.sheetnames
 ws = wb[sheets[0]]
 
-for x in range(3, 14180):
+for x in range(2, 14180):
    nome_empresarial = ws['A'+str(x)].value
    nome_empresarial = str(nome_empresarial)
    cnpj = getcnpj(nome_empresarial)
