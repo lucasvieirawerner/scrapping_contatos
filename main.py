@@ -2,7 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import openpyxl
 
-def getemail( empresa ):
+def getemail( cnpj ):
+   empresa = "https://www.qualempresa.com.br/empresa/" + cnpj + "/"
    page = requests.get(empresa)
    soup = BeautifulSoup(page.content, 'html.parser')
    resultato_html = soup.find_all(id="main")
@@ -11,7 +12,8 @@ def getemail( empresa ):
    email = strv[1].split('</strong></li>', 1)
    return email[0]
 
-def gettelefone( empresa ):
+def gettelefone( cnpj ):
+   empresa = "https://www.qualempresa.com.br/empresa/" + cnpj + "/"
    page = requests.get(empresa)
    soup = BeautifulSoup(page.content, 'html.parser')
    resultato_html = soup.find_all(id="main")
@@ -49,13 +51,13 @@ wb = openpyxl.Workbook()
 wb = openpyxl.load_workbook(filename = 'clientes.xlsx')
 sheets = wb.sheetnames
 ws = wb[sheets[0]]
-for x in range(2, 14180):
+
+for x in range(3, 14180):
    nome_empresarial = ws['A'+str(x)].value
    nome_empresarial = str(nome_empresarial)
    cnpj = getcnpj(nome_empresarial)
-   content = "https://www.qualempresa.com.br/empresa/" + cnpj + "/"
-   telefone = gettelefone(content)
-   email = getemail(content)
+   telefone = gettelefone(cnpj)
+   email = getemail(cnpj)
    print "email: "+email+" | telefone: "+telefone
 
 
